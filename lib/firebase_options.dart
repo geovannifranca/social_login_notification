@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'aula-firebase-veste-01',
     storageBucket: 'aula-firebase-veste-01.firebasestorage.app',
   );
+
 }

@@ -8,9 +8,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Social Login Notification',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const Login(),
+      title: 'Social Login with Notification',
+      theme: ThemeData(
+        colorScheme: ColorScheme.light(primary: Color(0xFFF9F4EC)),
+        scaffoldBackgroundColor: Color(0xFFF9F4EC),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: Colors.black,
+        ),
+      ),
+      home: const LoginScreen(),
     );
   }
 }
