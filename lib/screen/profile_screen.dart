@@ -1,9 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_login_notification/core/services/auth_service.dart';
 import 'package:social_login_notification/screen/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final User? user;
+  final AuthService _auth;
+  const ProfileScreen({
+    super.key,
+    required this.user,
+    required AuthService auth,
+  }) : _auth = auth;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -17,16 +24,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (FirebaseAuth.instance.currentUser != null)
-              Image.network(FirebaseAuth.instance.currentUser!.photoURL!),
+            if (widget.user != null) Image.network(widget.user!.photoURL!),
             const SizedBox(height: 20),
-            if (FirebaseAuth.instance.currentUser != null)
-              Text(FirebaseAuth.instance.currentUser!.displayName!),
+            if (widget.user != null) Text(widget.user!.displayName!),
             const SizedBox(height: 20),
             OutlinedButton(
               onPressed: () async {
-                if (FirebaseAuth.instance.currentUser != null) {
-                  await FirebaseAuth.instance.signOut();
+                if (widget.user != null) {
+                  await widget._auth.signOut();
                   if (context.mounted) {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
