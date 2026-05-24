@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_login_notification/screen/login_screen.dart';
+import 'package:social_login_notification/screen/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,15 +10,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Social Login with Notification',
       theme: ThemeData(
-        colorScheme: ColorScheme.light(primary: Color(0xFFF9F4EC)),
-        scaffoldBackgroundColor: Color(0xFFF9F4EC),
+        colorScheme: const ColorScheme.light(primary: Color(0xFFF9F4EC)),
+        scaffoldBackgroundColor: const Color(0xFFF9F4EC),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
           elevation: 0,
           foregroundColor: Colors.black,
         ),
       ),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

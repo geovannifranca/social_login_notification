@@ -20,7 +20,7 @@ class LoginButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(55),
       child: Ink(
         height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(55),

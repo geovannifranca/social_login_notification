@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:social_login_notification/screen/profile_screen.dart';
 import 'package:social_login_notification/widget/login_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -34,6 +35,38 @@ class _LoginScreenState extends State<LoginScreen> {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  Future<User?> signInWithFacebook() async {
+    try {
+      // 1. Abre o fluxo de login do Facebook
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+        loginBehavior: LoginBehavior.webOnly,
+      );
+
+      if (result.status == LoginStatus.success) {
+        // 2. Cria a credencial com o token recebido
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+          result.accessToken!.tokenString,
+        );
+
+        // 3. Autentica no Firebase
+        final UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithCredential(credential);
+
+        return userCredential.user;
+      } else {
+        // Cancelado ou erro
+        // ignore: avoid_print
+        print('Facebook login falhou: ${result.status} - ${result.message}');
+        return null;
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Erro no login com Facebook: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   await signInWithGoogle();
                   if (!mounted) return;
                   navigator.pushReplacement(
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
                   );
                 },
               ),
@@ -66,7 +101,27 @@ class _LoginScreenState extends State<LoginScreen> {
               LoginButton(
                 pathImage: 'assets/images/facebook.png',
                 text: 'Continue with facebook',
-                onPressed: () async {},
+                onPressed: () async {
+                  final user = await signInWithFacebook();
+                  if (user != null) {
+                    // Login com sucesso — navega para a home
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Login cancelado ou falhou.'),
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
               const SizedBox(height: 15),
               LoginButton(
@@ -75,12 +130,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {},
               ),
               const SizedBox(height: 40),
-              Row(
+              const Row(
                 children: [
                   Expanded(child: Divider(color: Colors.grey)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: const Text('Or', style: TextStyle(fontSize: 20)),
+                    child: Text('Or', style: TextStyle(fontSize: 20)),
                   ),
                   Expanded(child: Divider(color: Colors.grey)),
                 ],
