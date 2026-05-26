@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:social_login_notification/screen/login_screen.dart';
 import 'package:social_login_notification/screen/messasges_screen.dart';
 import 'package:social_login_notification/screen/profile_screen.dart';
 import 'package:social_login_notification/screen/settigns_screen.dart';
@@ -104,7 +105,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Sair'),
-            onTap: () {},
+            onTap: () {
+              _loginStore.logout();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            },
           ),
           const Spacer(),
           const SafeArea(child: Center(child: Text('Versão 1.0.0'))),
