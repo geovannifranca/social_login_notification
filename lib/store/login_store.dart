@@ -11,6 +11,9 @@ class LoginStore = LoginStoreBase with _$LoginStore;
 // The store-class
 abstract class LoginStoreBase with Store {
   final _auth = GetIt.I.get<AuthService>();
+  LoginStoreBase() {
+    currentUser = _auth.currentUser;
+  }
 
   @observable
   bool isFacebookLoading = false;
@@ -28,7 +31,6 @@ abstract class LoginStoreBase with Store {
   Future<void> loginGoogle() async {
     isGoogleLoading = true;
     errorMessage = null;
-    Future.delayed(const Duration(seconds: 3));
 
     try {
       final user = await _auth.signInWithGoogle();
@@ -40,7 +42,7 @@ abstract class LoginStoreBase with Store {
     } catch (e) {
       errorMessage = 'Erro ao entrar com Google: $e';
     } finally {
-      isGoogleLoading = false; // <- faltou zerar o loading!
+      isGoogleLoading = false;
     }
   }
 
@@ -48,7 +50,6 @@ abstract class LoginStoreBase with Store {
   Future<void> loginFacebook() async {
     isFacebookLoading = true;
     errorMessage = null;
-    Future.delayed(const Duration(seconds: 3));
     try {
       final user = await _auth.signInWithFacebook();
       if (user != null) {

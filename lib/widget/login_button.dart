@@ -29,10 +29,7 @@ class LoginButton extends StatelessWidget {
         ),
         child: isLoading
             ? const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: Colors.green,
-                ),
+                child: CircularProgressIndicator(color: Colors.green),
               )
             : Row(
                 children: [

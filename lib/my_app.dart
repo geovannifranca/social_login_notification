@@ -17,6 +17,9 @@ class MyApp extends StatelessWidget {
           elevation: 0,
           foregroundColor: Colors.black,
         ),
+        listTileTheme: const ListTileThemeData(
+          selectedColor: Color(0xFFDAB57F),
+        ),
       ),
       home: const SplashScreen(),
     );

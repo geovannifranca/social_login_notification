@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:social_login_notification/core/services/auth_service.dart';
 import 'package:social_login_notification/screen/profile_screen.dart';
 import 'package:social_login_notification/store/login_store.dart';
 import 'package:social_login_notification/widget/login_button.dart';
@@ -14,8 +13,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = GetIt.I.get<AuthService>();
   final _store = GetIt.I.get<LoginStore>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (_store.currentUser != null) {
                         navigator.pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
-                              user: _store.currentUser,
-                              auth: _auth,
-                            ),
+                            builder: (context) => const ProfileScreen(),
                           ),
                         );
                       }
@@ -65,16 +66,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: 'Continue with facebook',
                     onPressed: () async {
                       await _store.loginFacebook();
-                      if (!mounted) return;
-                      if (_store.currentUser != null) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
-                              user: _store.currentUser,
-                              auth: _auth,
+                      if (context.mounted) {
+                        if (_store.currentUser != null) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const ProfileScreen(),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       } else {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
